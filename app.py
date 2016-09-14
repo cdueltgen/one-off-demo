@@ -1,7 +1,7 @@
 import os
 import heroku3
 
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request
 
 DEBUG = "NO_DEBUG" not in os.environ
 PORT = int(os.environ.get("PORT", 5000))
@@ -26,12 +26,8 @@ def index():
 @app.route('/upload', methods=["GET", "POST"])
 def upload_file():
     """Read the file and put upload in worker queue."""
-    if request.method == "POST":
-        run_one_off()
-        return render_template('success.html')
-    else:
-        return render_template('success.html')
-        # return redirect('/bucketlist')
+    dyno = run_one_off()
+    return render_template('success.html', dyno_name=dyno.name)
 
 
 if __name__ == '__main__':
